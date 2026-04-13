@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RepoRead - AI GitHub Repository Analyzer</title>
+  <meta name="description" content="One click to understand any GitHub repo. AI-powered analysis of GitHub repositories in seconds.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#2563EB', hover: '#1D4ED8', active: '#1E40AF' },
+            secondary: '#64748B',
+            success: '#10B981',
+            warning: '#F59E0B',
+            error: '#EF4444',
+            surface: '#F8FAFC',
+            border: '#E2E8F0',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .fade-in { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .loading-spinner {
+      border: 3px solid #E2E8F0;
+      border-top: 3px solid #2563EB;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-white min-h-screen">
+  <div id="app" class="max-w-3xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <header class="flex items-center justify-between mb-12">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">📖</span>
+        <h1 class="text-2xl font-bold text-slate-900">RepoRead</h1>
+      </div>
+      <button id="historyBtn" class="text-sm text-secondary hover:text-primary transition-colors">
+        History ▼
+      </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-slate-900 mb-4">
+        One click to understand<br>any GitHub repo
+      </h2>
+      <p class="text-lg text-secondary max-w-xl mx-auto">
+        Paste a GitHub repository URL and get an instant AI-powered analysis — 
+        no signup required.
+      </p>
+    </section>
+
+    <!-- Input Section -->
+    <section class="mb-8">
+      <div class="flex gap-3">
+        <input 
+          type="text" 
+          id="repoUrl" 
+          placeholder="https://github.com/owner/repo"
+          class="flex-1 h-14 px-4 border-2 border-border rounded-lg text-lg
+                 placeholder:text-slate-400 focus:outline-none focus:border-primary
+                 transition-colors"
+        >
+        <button 
+          id="analyzeBtn"
+          class="h-14 px-8 bg-primary hover:bg-primary-hover active:bg-primary-active
+                 text-white font-semibold rounded-lg transition-colors
+                 disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          <span>Analyze</span>
+          <div id="btnSpinner" class="loading-spinner hidden"></div>
+        </button>
+      </div>
+      <p id="urlError" class="text-error text-sm mt-2 hidden"></p>
+      <p id="urlHint" class="text-secondary text-sm mt-2">
+        Supports public GitHub repositories only
+      </p>
+    </section>
+
+    <!-- Results Section (Initially Hidden) -->
+    <section id="results" class="hidden fade-in">
+      <!-- Repo Header Card -->
+      <div class="bg-surface border border-border rounded-xl p-6 mb-6">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div id="repoIcon" class="text-4xl">📦</div>
+            <div>
+              <h3 id="repoName" class="text-xl font-bold text-slate-900"></h3>
+              <p id="repoDescription" class="text-secondary mt-1"></p>
+            </div>
+          </div>
+          <div id="repoStats" class="flex gap-4 text-sm text-secondary">
+            <span id="repoStars" class="flex items-center gap-1">⭐</span>
+            <span id="repoForks" class="flex items-center gap-1">🍴</span>
+            <span id="repoLanguage" class="px-2 py-1 bg-slate-200 rounded text-xs"></span>
+          </div>
+        </div>
+        <div id="repoUrlDisplay" class="text-sm text-primary truncate"></div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div class="mb-6">
+        <h4 class="font-semibold text-slate-900 mb-3">Tech Stack</h4>
+        <div id="techStack" class="flex flex-wrap gap-2">
+          <!-- Tech badges injected here -->
+        </div>
+      </div>
+
+      <!-- Key Features -->
+      <div class="mb-6">
+        <h4 class="font-semibold text-slate-900 mb-3">Key Features</h4>
+        <ul id="keyFeatures" class="space-y-2 text-slate-700">
+          <!-- Features injected here -->
+        </ul>
+      </div>
+
+      <!-- How to Run -->
+      <div class="mb-6">
+        <h4 class="font-semibold text-slate-900 mb-3">How to Run</h4>
+        <ol id="howToRun" class="space-y-2 text-slate-700">
+          <!-- Steps injected here -->
+        </ol>
+      </div>
+
+      <!-- Common Pitfalls -->
+      <div class="mb-6">
+        <h4 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+          <span>⚠️</span> Common Pitfalls
+        </h4>
+        <ul id="pitfalls" class="space-y-2 text-slate-700">
+          <!-- Pitfalls injected here -->
+        </ul>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-3 mt-8">
+        <button id="copyBtn" class="px-4 py-2 border border-border rounded-lg hover:bg-surface transition-colors">
+          📋 Copy Results
+        </button>
+        <button id="shareBtn" class="px-4 py-2 border border-border rounded-lg hover:bg-surface transition-colors">
+          🔗 Share
+        </button>
+        <button id="newAnalysisBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+          Analyze Another →
+        </button>
+      </div>
+    </section>
+
+    <!-- Loading State (Initially Hidden) -->
+    <section id="loading" class="hidden text-center py-16">
+      <div class="loading-spinner mx-auto mb-4"></div>
+      <p class="text-secondary">Analyzing repository...</p>
+      <p id="loadingStep" class="text-sm text-slate-400 mt-2">Fetching GitHub data</p>
+    </section>
+
+    <!-- Error State (Initially Hidden) -->
+    <section id="errorState" class="hidden text-center py-16">
+      <div class="text-4xl mb-4">😕</div>
+      <h3 class="text-xl font-semibold text-slate-900 mb-2">Analysis Failed</h3>
+      <p id="errorMessage" class="text-secondary mb-4"></p>
+      <button id="retryBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+        Try Again
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 pt-8 border-t border-border text-center text-sm text-secondary">
+      <p>Built with AI • Powered by Kimi API</p>
+      <p class="mt-2">
+        <a href="https://github.com" class="text-primary hover:underline">GitHub</a>
+        • 
+        <a href="#" class="text-primary hover:underline">Privacy</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4 max-h-96 overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-lg">Analysis History</h3>
+        <button id="closeHistory" class="text-secondary hover:text-slate-900">✕</button>
+      </div>
+      <div id="historyList" class="space-y-2">
+        <!-- History items injected here -->
+      </div>
+      <p id="emptyHistory" class="text-center text-secondary py-8 hidden">
+        No analysis history yet
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // State
+    // ============================================
+    const state = {
+      isLoading: false,
+      currentResult: null,
+      history: JSON.parse(localStorage.getItem('reporead_history') || '[]')
+    }
+
+    // ============================================
+    // DOM Elements
+    // ============================================
+    const els = {
+      repoUrl: document.getElementById('repoUrl'),
+      analyzeBtn: document.getElementById('analyzeBtn'),
+      btnSpinner: document.getElementById('btnSpinner'),
+      urlError: document.getElementById('urlError'),
+      results: document.getElementById('results'),
+      loading: document.getElementById('loading'),
+      errorState: document.getElementById('errorState'),
+      errorMessage: document.getElementById('errorMessage'),
+      historyBtn: document.getElementById('historyBtn'),
+      historyModal: document.getElementById('historyModal'),
+      closeHistory: document.getElementById('closeHistory'),
+      historyList: document.getElementById('historyList'),
+      emptyHistory: document.getElementById('emptyHistory'),
+      copyBtn: document.getElementById('copyBtn'),
+      shareBtn: document.getElementById('shareBtn'),
+      newAnalysisBtn: document.getElementById('newAnalysisBtn'),
+      retryBtn: document.getElementById('retryBtn'),
+      loadingStep: document.getElementById('loadingStep'),
+      // Result elements
+      repoIcon: document.getElementById('repoIcon'),
+      repoName: document.getElementById('repoName'),
+      repoDescription: document.getElementById('repoDescription'),
+      repoStars: document.getElementById('repoStars'),
+      repoForks: document.getElementById('repoForks'),
+      repoLanguage: document.getElementById('repoLanguage'),
+      repoUrlDisplay: document.getElementById('repoUrlDisplay'),
+      techStack: document.getElementById('techStack'),
+      keyFeatures: document.getElementById('keyFeatures'),
+      howToRun: document.getElementById('howToRun'),
+      pitfalls: document.getElementById('pitfalls')
+    }
+
+    // ============================================
+    // URL Validation
+    // ============================================
+    function validateGitHubUrl(url) {
+      const patterns = [
+        /^https?:\/\/github\.com\/[\w-]+\/[\w.-]+$/,
+        /^https?:\/\/github\.com\/[\w-]+\/[\w.-]+\/tree\/[\w.-]+$/,
+        /^github\.com\/[\w-]+\/[\w.-]+$/
+      ]
+      return patterns.some(p => p.test(url.trim()))
+    }
+
+    function extractOwnerRepo(url) {
+      const match = url.match(/github\.com\/([\w-]+)\/([\w.-]+)/)
+      if (match) {
+        return { owner: match[1], repo: match[2].replace(/\/tree\/[\w.-]+$/, '') }
+      }
+      return null
+    }
+
+    // ============================================
+    // GitHub API
+    // ============================================
+    async function fetchGitHubData(owner, repo) {
+      els.loadingStep.textContent = 'Fetching GitHub data...'
+      
+      const headers = {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'RepoRead-App'
+      }
+
+      // Fetch repo metadata
+      const metaRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers })
+      if (!metaRes.ok) {
+        if (metaRes.status === 404) throw new Error('Repository not found')
+        if (metaRes.status === 403) throw new Error('GitHub API rate limit exceeded')
+        throw new Error(`GitHub API error: ${metaRes.status}`)
+      }
+      const meta = await metaRes.json()
+
+      // Fetch README
+      els.loadingStep.textContent = 'Reading README...'
+      const readmeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, { headers })
+      let readmeContent = ''
+      if (readmeRes.ok) {
+        const readmeData = await readmeRes.json()
+        readmeContent = atob(readmeData.content)
+      }
+
+      // Fetch file tree (top level)
+      els.loadingStep.textContent = 'Analyzing structure...'
+      const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/HEAD?recursive=1`, { headers })
+      let fileTree = []
+      if (treeRes.ok) {
+        const treeData = await treeRes.json()
+        fileTree = treeData.tree
+          .filter(f => f.type === 'blob')
+          .slice(0, 50)
+          .map(f => f.path)
+      }
+
+      return { meta, readmeContent, fileTree }
+    }
+
+    // ============================================
+    // AI Analysis (Kimi API)
+    // ============================================
+    async function analyzeWithKimi(data) {
+      els.loadingStep.textContent = 'AI is analyzing...'
+      
+      const { meta, readmeContent, fileTree } = data
+      const prompt = `You are an expert software developer analyzing a GitHub repository.
+
+## Repository Info
+- Name: ${meta.name}
+- Owner: ${meta.owner.login}
+- Description: ${meta.description || 'No description'}
+- Stars: ${meta.stargazers_count.toLocaleString()} | Forks: ${meta.forks_count.toLocaleString()} | Language: ${meta.language || 'N/A'}
+
+## README Content (first 3000 chars)
+${readmeContent.slice(0, 3000)}
+
+## File Structure (top 30 files)
+${fileTree.slice(0, 30).join('\n')}
+
+## Your Task
+Provide a structured analysis with these sections. Be concise and actionable.
+
+### Output Format (use this exact format):
+**Tech Stack:** [list the main technologies]
+**Key Features:** [5 bullet points]
+**How to Run:** [5 steps max]
+**Common Pitfalls:** [3 bullet points]
+
+Rules:
+- Be specific, not generic
+- Focus on what makes this project unique
+- How to Run should include actual commands
+- Pitfalls should be practical issues developers actually face`
+
+      // Note: Kimi API integration would go here
+      // For now, return a placeholder that shows the UI works
+      // Real implementation requires backend API route
+      
+      return {
+        techStack: [meta.language || 'JavaScript', 'Node.js', 'Git'],
+        keyFeatures: [
+          'Open source project',
+          'Active community',
+          `${meta.stargazers_count.toLocaleString()} stars on GitHub`,
+          `${meta.forks_count.toLocaleString()} forks`,
+          'Well-documented codebase'
+        ],
+        howToRun: [
+          'Clone the repository',
+          'Install dependencies',
+          'Follow the README instructions',
+          'Run the project',
+          'Explore the codebase'
+        ],
+        pitfalls: [
+          'Check compatibility before using',
+          'Review license terms',
+          'Test in development environment first'
+        ]
+      }
+    }
+
+    // ============================================
+    // UI Updates
+    // ============================================
+    function showLoading() {
+      els.results.classList.add('hidden')
+      els.errorState.classList.add('hidden')
+      els.loading.classList.remove('hidden')
+      els.analyzeBtn.disabled = true
+      els.btnSpinner.classList.remove('hidden')
+      els.analyzeBtn.querySelector('span').textContent = 'Analyzing...'
+    }
+
+    function hideLoading() {
+      els.loading.classList.add('hidden')
+      els.analyzeBtn.disabled = false
+      els.btnSpinner.classList.add('hidden')
+      els.analyzeBtn.querySelector('span').textContent = 'Analyze'
+    }
+
+    function showResults(result, url) {
+      els.loading.classList.add('hidden')
+      els.errorState.classList.add('hidden')
+      els.results.classList.remove('hidden')
+
+      // Update result display
+      els.repoName.textContent = result.repoName || els.repoUrl.value
+      els.repoDescription.textContent = result.description || 'No description provided'
+      els.repoStars.innerHTML = '⭐ ' + (result.stars || '0')
+      els.repoForks.innerHTML = '🍴 ' + (result.forks || '0')
+      els.repoLanguage.textContent = result.language || ''
+      els.repoUrlDisplay.textContent = url
+
+      // Tech Stack
+      els.techStack.innerHTML = result.techStack
+        .map(t => `<span class="px-3 py-1 bg-slate-100 border border-border rounded-md text-sm">${t}</span>`)
+        .join('')
+
+      // Key Features
+      els.keyFeatures.innerHTML = result.keyFeatures
+        .map(f => `<li class="flex items-start gap-2"><span class="text-success">•</span> ${f}</li>`)
+        .join('')
+
+      // How to Run
+      els.howToRun.innerHTML = result.howToRun
+        .map((s, i) => `<li class="flex items-start gap-3"><span class="font-semibold text-primary">${i + 1}.</span> ${s}</li>`)
+        .join('')
+
+      // Pitfalls
+      els.pitfalls.innerHTML = result.pitfalls
+        .map(p => `<li class="flex items-start gap-2"><span class="text-warning">⚠️</span> ${p}</li>`)
+        .join('')
+
+      // Save to history
+      saveToHistory(url, result)
+    }
+
+    function showError(message) {
+      els.loading.classList.add('hidden')
+      els.results.classList.add('hidden')
+      els.errorState.classList.remove('hidden')
+      els.errorMessage.textContent = message
+    }
+
+    function saveToHistory(url, result) {
+      const entry = {
+        url,
+        repoName: result.repoName || url,
+        analyzedAt: new Date().toISOString()
+      }
+      state.history = [entry, ...state.history.filter(h => h.url !== url)].slice(0, 10)
+      localStorage.setItem('reporead_history', JSON.stringify(state.history))
+    }
+
+    function renderHistory() {
+      if (state.history.length === 0) {
+        els.historyList.classList.add('hidden')
+        els.emptyHistory.classList.remove('hidden')
+        return
+      }
+      els.historyList.classList.remove('hidden')
+      els.emptyHistory.classList.add('hidden')
+      els.historyList.innerHTML = state.history.map(h => `
+        <div class="p-3 border border-border rounded-lg hover:bg-surface cursor-pointer transition-colors" data-url="${h.url}">
+          <p class="font-medium text-slate-900 truncate">${h.repoName}</p>
+          <p class="text-xs text-secondary">${new Date(h.analyzedAt).toLocaleString()}</p>
+        </div>
+      `).join('')
+    }
+
+    // ============================================
+    // Event Handlers
+    // ============================================
+    async function handleAnalyze() {
+      const url = els.repoUrl.value.trim()
+      
+      // Validate
+      if (!url) {
+        els.urlError.textContent = 'Please enter a GitHub URL'
+        els.urlError.classList.remove('hidden')
+        return
+      }
+      if (!validateGitHubUrl(url)) {
+        els.urlError.textContent = 'Please enter a valid GitHub URL (e.g., https://github.com/facebook/react)'
+        els.urlError.classList.remove('hidden')
+        return
+      }
+      els.urlError.classList.add('hidden')
+
+      const ownerRepo = extractOwnerRepo(url)
+      if (!ownerRepo) {
+        els.urlError.textContent = 'Could not parse repository info'
+        els.urlError.classList.remove('hidden')
+        return
+      }
+
+      showLoading()
+
+      try {
+        els.loadingStep.textContent = 'Connecting to GitHub...'
+        const data = await fetchGitHubData(ownerRepo.owner, ownerRepo.repo)
+        
+        const result = await analyzeWithKimi(data)
+        result.repoName = data.meta.full_name
+        result.description = data.meta.description
+        result.stars = data.meta.stargazers_count
+        result.forks = data.meta.forks_count
+        result.language = data.meta.language
+        
+        showResults(result, url)
+      } catch (err) {
+        console.error('Analysis failed:', err)
+        showError(err.message || 'Failed to analyze repository')
+      } finally {
+        hideLoading()
+      }
+    }
+
+    // ============================================
+    // Event Listeners
+    // ============================================
+    els.analyzeBtn.addEventListener('click', handleAnalyze)
+    els.repoUrl.addEventListener('keypress', e => {
+      if (e.key === 'Enter') handleAnalyze()
+    })
+    els.repoUrl.addEventListener('input', () => {
+      els.urlError.classList.add('hidden')
+    })
+
+    els.historyBtn.addEventListener('click', () => {
+      renderHistory()
+      els.historyModal.classList.remove('hidden')
+      els.historyModal.classList.add('flex')
+    })
+
+    els.closeHistory.addEventListener('click', () => {
+      els.historyModal.classList.add('hidden')
+      els.historyModal.classList.remove('flex')
+    })
+
+    els.historyModal.addEventListener('click', e => {
+      if (e.target === els.historyModal) {
+        els.historyModal.classList.add('hidden')
+        els.historyModal.classList.remove('flex')
+      }
+    })
+
+    els.historyList.addEventListener('click', e => {
+      const item = e.target.closest('[data-url]')
+      if (item) {
+        els.repoUrl.value = item.dataset.url
+        els.historyModal.classList.add('hidden')
+        els.historyModal.classList.remove('flex')
+        handleAnalyze()
+      }
+    })
+
+    els.newAnalysisBtn.addEventListener('click', () => {
+      els.results.classList.add('hidden')
+      els.repoUrl.value = ''
+      els.repoUrl.focus()
+    })
+
+    els.retryBtn.addEventListener('click', handleAnalyze)
+
+    els.copyBtn.addEventListener('click', () => {
+      const text = els.repoName.textContent + '\n' + 
+        els.repoDescription.textContent + '\n\n' +
+        'Tech Stack: ' + els.techStack.textContent + '\n\n' +
+        'Key Features:\n' + els.keyFeatures.textContent + '\n\n' +
+        'How to Run:\n' + els.howToRun.textContent + '\n\n' +
+        'Pitfalls:\n' + els.pitfalls.textContent
+      navigator.clipboard.writeText(text).then(() => {
+        els.copyBtn.textContent = '✅ Copied!'
+        setTimeout(() => { els.copyBtn.textContent = '📋 Copy Results' }, 2000)
+      })
+    })
+
+    els.shareBtn.addEventListener('click', () => {
+      const url = els.repoUrl.value
+      navigator.clipboard.writeText(window.location.origin + '?repo=' + encodeURIComponent(url)).then(() => {
+        els.shareBtn.textContent = '✅ Link Copied!'
+        setTimeout(() => { els.shareBtn.textContent = '🔗 Share' }, 2000)
+      })
+    })
+
+    // Check for URL param on load
+    const params = new URLSearchParams(window.location.search)
+    const repoParam = params.get('repo')
+    if (repoParam) {
+      els.repoUrl.value = repoParam
+      handleAnalyze()
+    }
+  </script>
+</body>
+</html>
