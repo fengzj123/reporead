@@ -126,8 +126,8 @@ export default function Home() {
           <div>
             <section className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-6 py-20 text-center">
               <div className="animate-fade-in-up animate-delay-100 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-8"><span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />AI-Powered GitHub Analyzer</div>
-              <h1 className="animate-fade-in-up animate-delay-200 text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight"><span className="text-white">Understand any</span><br /><span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">GitHub repository</span><br /><span className="text-white">in seconds</span></h1>
-              <p className="animate-fade-in-up animate-delay-300 text-lg text-white/50 max-w-2xl mb-10">Stop spending hours reading code. Paste any GitHub URL and get instant insights about tech stack, key features, and how to get started.</p>
+              <h1 className="animate-fade-in-up animate-delay-200 text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight"><span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">One URL.</span><br /><span className="text-white">Every repo, decoded.</span></h1>
+              <p className="animate-fade-in-up animate-delay-300 text-lg text-white/50 max-w-2xl mb-10">Paste any GitHub URL. Get complete insights — tech stack, key features, and how to get started.</p>
               <div className="animate-fade-in-up animate-delay-400 w-full max-w-2xl mb-12">
                 <div className="relative group">
                   <div className="absolute -inset-px bg-gradient-to-r from-blue-500/50 via-cyan-500/50 to-teal-500/50 rounded-2xl blur-sm opacity-75 group-hover:opacity-100 transition-opacity" />
