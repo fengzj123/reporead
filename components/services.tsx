@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { FileCode2, GitBranch, Boxes, Terminal, CheckCircle2 } from "lucide-react"
+import { FileCode2, GitBranch, Boxes, Terminal, CheckCircle2, Globe, FileText, Code2 } from "lucide-react"
 
 const services = [
   {
@@ -42,8 +42,8 @@ function OverviewDemo() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center">
-          <FileCode2 className="w-5 h-5 text-indigo-400" />
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500/20 to-teal-500/20 flex items-center justify-center">
+          <FileCode2 className="w-5 h-5 text-teal-400" />
         </div>
         <div>
           <div className="text-sm font-medium text-white">vercel/next.js</div>
@@ -66,13 +66,13 @@ function OverviewDemo() {
       
       <div className="grid grid-cols-3 gap-3 pt-3">
         {[
-          { label: "Stars", value: "128K" },
-          { label: "Forks", value: "27K" },
-          { label: "Issues", value: "2.1K" }
-        ].map((stat) => (
-          <div key={stat.label} className="text-center p-3 rounded-xl bg-white/[0.02]">
-            <div className="text-lg font-semibold text-white">{stat.value}</div>
-            <div className="text-xs text-white/40">{stat.label}</div>
+          { Icon: Code2, label: "REST & GraphQL" },
+          { Icon: Globe, label: "All Languages" },
+          { Icon: FileText, label: "Auto Docs" }
+        ].map(({ Icon, label }) => (
+          <div key={label} className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.02]">
+            <Icon className="w-4 h-4 text-white/40 shrink-0" strokeWidth={1.5} />
+            <span className="text-xs text-white/60">{label}</span>
           </div>
         ))}
       </div>
@@ -82,8 +82,8 @@ function OverviewDemo() {
 
 function ArchitectureDemo() {
   const layers = [
-    { name: "Frontend", items: ["React 18", "TypeScript", "Tailwind CSS"], color: "indigo" },
-    { name: "Backend", items: ["Node.js", "API Routes", "Middleware"], color: "violet" },
+    { name: "Frontend", items: ["React 18", "TypeScript", "Tailwind CSS"], color: "teal" },
+    { name: "Backend", items: ["Node.js", "API Routes", "Middleware"], color: "teal" },
     { name: "Data", items: ["PostgreSQL", "Prisma ORM", "Redis"], color: "emerald" }
   ]
   
@@ -161,8 +161,8 @@ function UsageDemo() {
 function InsightsDemo() {
   const metrics = [
     { label: "Code Quality", value: 92, color: "emerald" },
-    { label: "Documentation", value: 78, color: "indigo" },
-    { label: "Test Coverage", value: 85, color: "violet" }
+    { label: "Documentation", value: 78, color: "teal" },
+    { label: "Test Coverage", value: 85, color: "teal" }
   ]
   
   return (
@@ -189,8 +189,8 @@ function InsightsDemo() {
         ))}
       </div>
       
-      <div className="flex items-center gap-2 p-3 rounded-xl bg-indigo-500/5 border border-indigo-500/10">
-        <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+      <div className="flex items-center gap-2 p-3 rounded-xl bg-teal-500/5 border border-teal-500/10">
+        <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
         <span className="text-sm text-white/60">Well-maintained repository with active development</span>
       </div>
     </div>
@@ -205,12 +205,12 @@ export function Services() {
   return (
     <section id="services" className="relative py-32 overflow-hidden">
       {/* Background elements */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px]" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[120px]" />
       
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
         <div className="text-center mb-20">
-          <span className="text-sm text-indigo-400 font-medium">Our Services</span>
+          <span className="text-sm text-teal-400 font-medium">Our Services</span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-4 mb-6 text-balance">
             AI Solutions That Decode
             <br />Any Codebase
@@ -234,21 +234,21 @@ export function Services() {
                   onClick={() => setActiveService(service.id)}
                   className={`w-full text-left p-6 rounded-2xl border transition-all duration-300 group ${
                     isActive 
-                      ? 'bg-white/[0.03] border-indigo-500/30' 
+                      ? 'bg-white/[0.03] border-teal-500/30' 
                       : 'bg-transparent border-white/5 hover:border-white/10 hover:bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex items-start gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                      isActive ? 'bg-indigo-500/20' : 'bg-white/5 group-hover:bg-white/10'
+                      isActive ? 'bg-teal-500/20' : 'bg-white/5 group-hover:bg-white/10'
                     }`}>
-                      <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-400' : 'text-white/60'}`} />
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-teal-400' : 'text-white/60'}`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-white">{service.title}</h3>
                         <span className={`text-xs px-2 py-0.5 rounded-full ${
-                          isActive ? 'bg-indigo-500/20 text-indigo-400' : 'bg-white/5 text-white/40'
+                          isActive ? 'bg-teal-500/20 text-teal-400' : 'bg-white/5 text-white/40'
                         }`}>
                           {service.subtitle}
                         </span>
@@ -264,7 +264,7 @@ export function Services() {
           {/* Demo panel */}
           <div className="sticky top-24">
             <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 via-violet-500/20 to-indigo-500/20 rounded-3xl blur-xl opacity-50" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-teal-500/20 via-teal-500/20 to-teal-500/20 rounded-3xl blur-xl opacity-50" />
               <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
                 <DemoComponent />
               </div>

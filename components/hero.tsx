@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, Sparkles, Loader2 } from "lucide-react"
+import { ArrowRight, Sparkles, Loader2, Zap, Unlock, Brain } from "lucide-react"
 
 export function Hero() {
   const [url, setUrl] = useState("")
@@ -148,15 +148,17 @@ export function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-center gap-12 mt-16">
+        <div className="flex items-center justify-center gap-16 mt-16">
           {[
-            { value: "50K+", label: "Repos Analyzed" },
-            { value: "12K+", label: "Developers" },
-            { value: "99.9%", label: "Accuracy" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
-              <div className="text-sm text-white/40 mt-1">{stat.label}</div>
+            { Icon: Zap, label: "Instant Analysis" },
+            { Icon: Unlock, label: "No Login Required" },
+            { Icon: Brain, label: "AI-Powered Insights" },
+          ].map(({ Icon, label }) => (
+            <div key={label} className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                <Icon className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+              </div>
+              <span className="text-sm text-white/60">{label}</span>
             </div>
           ))}
         </div>

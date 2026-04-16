@@ -47,7 +47,7 @@ function PasteVisual() {
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
         </svg>
         <span className="text-white/80 font-mono">{typed}</span>
-        <span className="w-0.5 h-5 bg-indigo-400 animate-pulse" />
+        <span className="w-0.5 h-5 bg-teal-400 animate-pulse" />
       </div>
       
       <div className="flex items-center gap-2 mt-4 text-sm text-white/40">
@@ -96,7 +96,7 @@ function AnalysisVisual() {
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#6366f1" />
-                <stop offset="100%" stopColor="#8b5cf6" />
+                <stop offset="100%" stopColor="#14b8a6" />
               </linearGradient>
             </defs>
           </svg>
@@ -114,11 +114,11 @@ function AnalysisVisual() {
           
           return (
             <div key={task.name} className={`flex items-center gap-3 p-2 rounded-lg transition-all ${
-              isActive ? 'bg-indigo-500/10' : ''
+              isActive ? 'bg-teal-500/10' : ''
             }`}>
               <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
                 isDone ? 'bg-emerald-500/20 text-emerald-400' : 
-                isActive ? 'bg-indigo-500/20 text-indigo-400' : 'bg-white/5 text-white/30'
+                isActive ? 'bg-teal-500/20 text-teal-400' : 'bg-white/5 text-white/30'
               }`}>
                 {isDone ? '✓' : i + 1}
               </div>
@@ -143,22 +143,22 @@ function InsightsVisual() {
         <span className="font-medium">Analysis Complete</span>
       </div>
       
-      <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-3">
         {[
-          { label: "Files", value: "847" },
-          { label: "Dependencies", value: "124" },
-          { label: "Components", value: "56" },
-          { label: "API Routes", value: "23" }
-        ].map((stat) => (
-          <div key={stat.label} className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-            <div className="text-xl font-bold text-white">{stat.value}</div>
-            <div className="text-xs text-white/40">{stat.label}</div>
+          { label: "Type", value: "Next.js App (App Router)" },
+          { label: "Language", value: "TypeScript — 94%" },
+          { label: "Architecture", value: "Monorepo, 3 layers" },
+          { label: "Build", value: "Turbopack + pnpm" }
+        ].map((item) => (
+          <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+            <span className="text-xs text-white/40">{item.label}</span>
+            <span className="text-sm font-medium text-white/80">{item.value}</span>
           </div>
         ))}
       </div>
       
       <div className="flex gap-2 pt-2">
-        <button className="flex-1 py-2.5 rounded-xl bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-400 transition-colors">
+        <button className="flex-1 py-2.5 rounded-xl bg-teal-500 text-white text-sm font-medium hover:bg-teal-400 transition-colors">
           View Report
         </button>
         <button className="px-4 py-2.5 rounded-xl bg-white/5 text-white/60 text-sm hover:bg-white/10 transition-colors">
@@ -181,12 +181,12 @@ export function Process() {
 
   return (
     <section id="process" className="relative py-32 overflow-hidden">
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-violet-500/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[120px]" />
       
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-20">
-          <span className="text-sm text-indigo-400 font-medium">Our Process</span>
+          <span className="text-sm text-teal-400 font-medium">Our Process</span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-4 mb-6 text-balance">
             Simple, Smart, and
             <br />Scalable Analysis
@@ -211,13 +211,13 @@ export function Process() {
                 }`}
               >
                 {/* Glow effect */}
-                <div className={`absolute -inset-px rounded-3xl bg-gradient-to-b from-indigo-500/50 to-transparent transition-opacity duration-500 ${
+                <div className={`absolute -inset-px rounded-3xl bg-gradient-to-b from-teal-500/50 to-transparent transition-opacity duration-500 ${
                   isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
                 }`} />
                 
                 <div className={`relative h-full rounded-3xl border transition-all duration-500 overflow-hidden ${
                   isActive 
-                    ? 'bg-white/[0.03] border-indigo-500/30' 
+                    ? 'bg-white/[0.03] border-teal-500/30' 
                     : 'bg-white/[0.01] border-white/5 hover:border-white/10'
                 }`}>
                   {/* Step number */}
@@ -233,7 +233,7 @@ export function Process() {
                   {/* Content */}
                   <div className="p-6 pt-0">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">
+                      <span className="text-xs font-mono text-teal-400 bg-teal-500/10 px-2 py-1 rounded">
                         Step {step.number}
                       </span>
                     </div>
@@ -253,7 +253,7 @@ export function Process() {
               key={i}
               onClick={() => setActiveStep(i)}
               className={`h-1.5 rounded-full transition-all duration-500 ${
-                activeStep === i ? 'w-8 bg-indigo-500' : 'w-1.5 bg-white/20 hover:bg-white/30'
+                activeStep === i ? 'w-8 bg-teal-500' : 'w-1.5 bg-white/20 hover:bg-white/30'
               }`}
             />
           ))}

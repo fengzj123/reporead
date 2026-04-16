@@ -5,52 +5,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const cases = [
   {
-    quote: "RepoRead helped our team onboard 3x faster by understanding complex codebases instantly",
-    company: "TechFlow",
-    description: "A fast-growing startup needed to quickly onboard new developers to their monorepo. RepoRead provided instant architecture understanding and setup guides.",
-    impact: [
-      { value: "3x", label: "Faster Onboarding" },
-      { value: "40%", label: "Time Saved" },
-      { value: "12", label: "Repos Analyzed" },
-      { value: "2hrs", label: "Avg. Time Saved" }
-    ],
+    quote: "Instantly understand any open source project before you commit",
+    description: "Paste a GitHub URL and get a complete breakdown of tech stack, key modules, and how to run it — all powered by AI.",
     gradient: "from-indigo-500 to-violet-500"
   },
   {
-    quote: "We evaluated 50+ open source libraries in a week instead of a month",
-    company: "NexaCorp",
-    description: "The engineering team needed to evaluate multiple libraries for their new project. RepoRead provided quick comparisons of architecture and code quality.",
-    impact: [
-      { value: "50+", label: "Libraries Analyzed" },
-      { value: "75%", label: "Evaluation Time Cut" },
-      { value: "A+", label: "Chosen Lib Quality" },
-      { value: "1 Week", label: "Decision Time" }
-    ],
+    quote: "Evaluate libraries and frameworks in seconds, not hours",
+    description: "Compare architecture, dependencies, and code quality across multiple repositories to make faster technical decisions.",
     gradient: "from-violet-500 to-pink-500"
   },
   {
-    quote: "Understanding legacy codebases went from days to minutes",
-    company: "GrowthPeak",
-    description: "Inherited a legacy codebase with minimal documentation. RepoRead mapped the entire architecture and generated comprehensive documentation.",
-    impact: [
-      { value: "847", label: "Files Mapped" },
-      { value: "100%", label: "Coverage" },
-      { value: "5min", label: "Analysis Time" },
-      { value: "0", label: "Surprises Left" }
-    ],
+    quote: "Onboard to new codebases without reading a single line",
+    description: "Get AI-generated documentation, module summaries, and health scores for any repository — new or legacy.",
     gradient: "from-emerald-500 to-teal-500"
-  },
-  {
-    quote: "Due diligence for acquisitions became effortless with instant code analysis",
-    company: "ScaleByte",
-    description: "During M&A evaluations, the tech team needed to quickly assess multiple company codebases. RepoRead provided detailed technical insights in minutes.",
-    impact: [
-      { value: "8", label: "Companies Evaluated" },
-      { value: "90%", label: "Faster DD" },
-      { value: "$2M", label: "Deal Value" },
-      { value: "A+", label: "Tech Score" }
-    ],
-    gradient: "from-orange-500 to-red-500"
   }
 ]
 
@@ -118,33 +85,20 @@ export function CaseStudies() {
                   <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl bg-gradient-to-r ${caseStudy.gradient}`} />
                   
                   <div className="h-full rounded-2xl border border-white/5 bg-white/[0.02] p-8 hover:bg-white/[0.03] transition-colors">
+                    {/* Top gradient accent */}
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${caseStudy.gradient} flex items-center justify-center mb-6`}>
+                      <span className="w-3 h-3 rounded-full bg-white/80" />
+                    </div>
+                    
                     {/* Quote */}
                     <blockquote className="text-xl md:text-2xl font-medium text-white leading-relaxed mb-6">
                       &ldquo;{caseStudy.quote}&rdquo;
                     </blockquote>
                     
-                    {/* Company */}
-                    <div className="flex items-center gap-3 mb-6 pb-6 border-b border-white/5">
-                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${caseStudy.gradient} flex items-center justify-center text-white font-bold`}>
-                        {caseStudy.company[0]}
-                      </div>
-                      <span className="font-medium text-white">{caseStudy.company}</span>
-                    </div>
-                    
                     {/* Description */}
-                    <p className="text-sm text-white/50 leading-relaxed mb-8">
+                    <p className="text-sm text-white/50 leading-relaxed">
                       {caseStudy.description}
                     </p>
-                    
-                    {/* Impact stats */}
-                    <div className="grid grid-cols-4 gap-4">
-                      {caseStudy.impact.map((stat) => (
-                        <div key={stat.label}>
-                          <div className="text-lg font-bold text-white">{stat.value}</div>
-                          <div className="text-xs text-white/40">{stat.label}</div>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>

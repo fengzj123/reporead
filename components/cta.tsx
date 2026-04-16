@@ -101,7 +101,7 @@ export function CTA() {
                 </svg>
               ))}
             </div>
-            <p className="text-sm text-white/50 mt-1">Loved by 12,000+ developers</p>
+            <p className="text-sm text-white/50 mt-1">Try it — analyze any repo in seconds</p>
           </div>
         </div>
       </div>
